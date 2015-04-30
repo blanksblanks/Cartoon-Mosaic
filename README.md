@@ -16,13 +16,12 @@ In addition, color similarity plays an important role in producing a high-qualit
 
 More accurate color similarity comparison methods have been proposed and implemented by researchers. Shah et al. deals with this by first computing the ranges for the red, green, and blue components of the patches, then calculating the differences between the RGB components of each patch with every tile in the database. The tiles whose difference values are smaller than a specified cutoff range are considered as potential representatives of a patch. Among these tiles, the mean values of the RGB difference is calculated, and the tile with the lowest mean is selected to represent the patch, provided that the number of times the tile has been used has not yet passed the threshold set by the programmers. The mean RGB difference formulas are shown below:
 
+```
 RSR = Pi,r – Tj,r (1)
-
 RSG = Pi,g – Tj,g (2)
-
 RSB = Pi,b – Tj,b (3)
-
 RSsum = RSR + RSG + RSB (4)
+```
 
 where Pi,r, Pi,g and Pi,b are red, green and blue component of ith patch respectively, and Tj,r, Tj,g and Tj,b are components of tiles.
 
