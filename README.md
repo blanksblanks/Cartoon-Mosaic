@@ -184,8 +184,8 @@ Throughout the process, we will be jointly writing the report, probably in a Goo
 
 ## References:
 
-Finkelstein, A., & Range, M. (1998). Image Mosaics. EP ‘98/RIDT ‘98 Proceedings of the 7th International Conference on Electronic Publishing, 11-22.
-Guo, D., Tang, J., Cui, Y., Ding, J., & Zhao, C. (2015). Saliency-based content-aware lifestyle image mosaics. Journal of Visual Communication and Image Representation, 26, 192-199.
-Harmon, L.D. (1973). The Recognition of Faces. Scientific American 229(5), 70–82.
-Klein, A.W., Grant, T., Finkelstein, A., & Cohen, M.F. (2002). Video Mosaics. NPAR 2002: Second International Symposium on Non Photorealistic Rendering, 21-28.
-Shah, J., Gala, J., Parmar, K., Shah, M., & Kambli, M. (2014). Range Based Search For Photomosaic Generation. International Journal of Advanced Research in Computer and Communication Engineering, 3(2).
+* Finkelstein, A., & Range, M. (1998). Image Mosaics. EP ‘98/RIDT ‘98 Proceedings of the 7th International Conference on Electronic Publishing, 11-22.
+* Guo, D., Tang, J., Cui, Y., Ding, J., & Zhao, C. (2015). Saliency-based content-aware lifestyle image mosaics. Journal of Visual Communication and Image Representation, 26, 192-199.
+* Harmon, L.D. (1973). The Recognition of Faces. Scientific American 229(5), 70–82.
+* Klein, A.W., Grant, T., Finkelstein, A., & Cohen, M.F. (2002). Video Mosaics. NPAR 2002: Second International Symposium on Non Photorealistic Rendering, 21-28.
+* Shah, J., Gala, J., Parmar, K., Shah, M., & Kambli, M. (2014). Range Based Search For Photomosaic Generation. International Journal of Advanced Research in Computer and Communication Engineering, 3(2).
