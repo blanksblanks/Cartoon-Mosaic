@@ -1,5 +1,4 @@
-# Project Proposal: Image Mosaic
-:sunrise: :statue_of_liberty: :mount_fuji: :bridge_at_night:
+# Project Proposal: Image Mosaic :sunrise: :statue_of_liberty: :mount_fuji: :bridge_at_night:
 
 There are many commercial applications of photo mosaics, such as Picture Mosaics, Mosaically, EasyMoza, etc. Mosaics are a form of art in which a collection of small images called tiles that are arranged in such a way that when they are seen together from a distance they suggest a larger image. Various mosaics can be created for an image depending on the choice of tiles and the restrictions in their placement. Our team aims to develop a system that allows users to take a set of images and base image in order to make an aesthetically pleasing image mosaic.
 
