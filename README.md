@@ -81,8 +81,7 @@ Initially, we will start with tiles of uniform sizes, but as later mentioned in 
 
 _Step 1: Domain Engineering_
 
-The essence of this step involves finding source and target images that fit our criteria.
-Criteria for the tile images (the images that will be used to make the photomosaic) include:
+The essence of this step involves finding source and target images that fit our criteria. Criteria for the tile images (the images that will be used to make the photomosaic) include:
 * The image should have a transparent background - it can either start with one, or we can remove the background to make it transparent in Step 2
 * It must be possible to crop the image into a square
 * The image must be comprised of at least two different colors
@@ -164,16 +163,19 @@ We will make efforts to find/obtain/produce training data together for Step 1. T
 _Step 2: Data Reduction_
 
 a) Nina will start this part of the image analysis. For the tile images library, this involves cropping all images to be square and resizing them to an appropropriate size that later zooming into the image mosaic will still reveal the tiny details. For the base image, this step involves resizing the base image so that it is fuzzified and appears as if it were being viewed from a distance, then creating a tile map for this version of the base image. After that, the base image must be reduced to a tile map. We will start out with uniformly sized tiles.
+
 b) Both of us will experiment with tile sizes. The smaller the tile, the easier it is to create the larger source image. However, it’s important that each tile retain its unique details in order to be seen with the naked eye. So after handling uniformly sized tiles as a baseline, we will experiment with creating differently sized tiles so that each tile is optimized to be as large as possible without compromising the clarity of the base image too much, retaining small tiles where detailed features are needed. We have also restricted images to be square and oriented the same way, but time permitting, we can experiment with orientation and different shapes.
 
 _Step 3: Matching Tiles to Image Regions by Similarity_
 
 a) In this step, we will generate similarities between regions of the base image and images from the tile library. First, we will begin with just color similarity.
+
 b) After creating a mosaic baseline, we will return to this step and step 2 to finetune and experiment our threshold values and algorithms. The literature that we described in the earlier part of this proposal suggests new efficient ways to find color similarities using not just RGB but also HSV values, so we will experiment with improving our color matching algorithm so it is more robust, and consider also whether or not we need to discard black as we did in Assignment 2. We will also experiment with texture similarities.
 
 _Step 4: Rendering the Image Mosaic_
 
 a) Based on these similarity relationships, Melanie will stitch the image together because the method she used in Assignment 2 seemed more straightforward than the matplotlib graphs that Nina used to create composite images.
+
 b) We can also experiment with other techniques here such as colorizing the image mosaic to more closely resemble the colors of the original pixels, or ghosting (overlay semi-opaque tiles on to the original image instead of generating an image mosaic on a blank canvas, or superimpose the source image onto a grid of tile images), and assess the results.
 
 _Step 5: Performance Evaluation_
