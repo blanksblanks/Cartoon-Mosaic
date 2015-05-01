@@ -6,26 +6,32 @@ import numpy as np
 # ============================================================
 
 # resize image to w pixels wide
-def resize(image, new_w):
+def resize_by_w(image, new_w):
     r = new_w / image.shape[1] # calculate aspect ratio
     dim = (new_w, int(image.shape[0] * r))
     image = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
     return image
+
+# resize image by percentage
+def resize_by_p(image, percent):
+	w, h = get_dimensions(image)
+	desired_w = (percent/100) * w
+	image = resize_by_w(image, desired_w)
+	return image
 
 # crop image
 def crop(image, start_y, end_y, start_x, end_x):
 	image = image[start_y:end_y, start_x:end_x]
 	return image
 
-def crop_square(image, new_w):
-	image = resize(image, new_w)
-	new_w, new_h = get_dimensions(image)
-	if (new_w > new_h):
-		offset = (new_w - new_h) / 2
-		image = crop(image, 0, new_h, offset, new_w-offset)
-	elif (new_h > new_w):
-		offset = (new_h - new_w) / 2
-		image = crop(image, offset, new_h-offset, 0, new_w)
+def crop_square(image):
+	w, h = get_dimensions(image)
+	if (w > h):
+		offset = (w - h) / 2
+		image = crop(image, 0, h, offset, w-offset)
+	elif (h > w):
+		offset = (h - w) / 2
+		image = crop(image, offset, h-offset, 0, w)
 	# else it is already square
 	return image
 
@@ -96,10 +102,9 @@ def main():
     if len(sys.argv) < 2:
         sys.exit("Need to specify a path from which to read images")
 
+    global NUM_IM
     imageformat=".png"
     path = "./" + sys.argv[1]
-
-    combination = []
 
     # load image sequence
     if os.path.exists(path):
@@ -109,9 +114,9 @@ def main():
         for el in imfilelist:
             sys.stdout.write(el)
             image = cv2.imread(el, cv2.IMREAD_UNCHANGED) # load original
-            image = crop_square(image, 800)
+            image = crop_square(image)
             show(image, 1000)
-            save(image, el[:-4]+'_resized.png')
+            save(image, el[:-4]+'_cropped.png')
     else:
         sys.exit("The path name does not exist")
 
