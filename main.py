@@ -30,8 +30,10 @@ def main():
 
     # Parse command line args
     base_path = sys.argv[1]
-    tile_path = sys.argv[2]
     format = sys.argv[1][-4:]
+    tile_path = sys.argv[2]
+    if len(sys.argv) is 4:
+    	format = sys.argv[3]
 
 	# Read tile library images first
     if os.path.exists(base_path) and os.path.exists(tile_path):
@@ -55,13 +57,15 @@ def main():
     for row in base.histograms:
         the_row = []
         for histogram in row:
-	        closest = 1.0
+	        closest = 100.0
 	        for key in tiles:
 	            tile = tiles[key]
-	            distance = S.l1_color_norm(histogram, tiles[key].histogram)
+	            distance = S.l1_color_norm(histogram, tile.histogram)
+	            # Why are so many 0.5?
 	            if (distance < closest):
 	                closest = distance
 	                closest_tile = tile
+	        # print closest_tile
 	        the_row.append(closest_tile.title)
         print the_row
         the_chosen.append(the_row)
@@ -83,7 +87,7 @@ def main():
     cv2.imwrite("mosaic.png", mosaic)
     cv2.imshow("Mosaic", mosaic)
 
-    print "Okay we're done for now"
-    print the_chosen
+    # print "Okay we're done for now"
+    # print the_chosen
 
 if __name__ == "__main__": main()
