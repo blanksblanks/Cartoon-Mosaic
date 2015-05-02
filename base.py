@@ -5,10 +5,11 @@ import similarity as S
 TILE_WIDTH = 30
 
 class Base():
-	def __init__(self, path):
+	def __init__(self, path,percent=0):
 		self.path = path
 		self.image = cv2.imread(path, cv2.IMREAD_UNCHANGED)
-		# self.image = R.resize_by_p(self.image, 100*TILE_WIDTH)
+		if percent != 0:
+			self.image = R.resize_by_p(self.image, percent)
 		self.height = len(self.image)
 		self.width = len(self.image[0])
 	# 	self.histograms = find_quadrants(self) # list of quadrant histograms
