@@ -25,7 +25,8 @@ def entitle(impath, path, format):
 def main():
 	# Check if user has provided a base image and tile library
     if len(sys.argv) < 2:
-        sys.exit("Usage: python main.py base-image-path tile-directory-path")
+        sys.exit("Usage: python main.py base-image-path tile-directory-path\n \
+        		  Example: python main.py nyan.png 151")
 
     # Parse command line args
     base_path = sys.argv[1]
