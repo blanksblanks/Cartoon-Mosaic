@@ -81,19 +81,29 @@ def color_histogram(image, title, save_plot=False):
             # Do not count background pixels
             # All transparent pixel, [206 140 90 0], [255 255 255 0]
             # have an alpha channel of 0
-            if pixel[3] == 0:
-            	pixel[0] = 255
-            	pixel[1] = 255
-            	pixel[2] = 255
-            else:
-                # Note: pixel[i] is descending since OpenCV loads BGR
-                r_bin = pixel[2] / BIN_SIZE
-                g_bin = pixel[1] / BIN_SIZE
-                b_bin = pixel[0] / BIN_SIZE
-                hist[r_bin][g_bin][b_bin] += 1
-                # Generate list of color keys for visualization
-                if (r_bin,g_bin,b_bin) not in colors:
-                    colors.append( (r_bin,g_bin,b_bin) )
+            # Note these if and/or statements work bc of short-circuit logic
+            try:
+                if pixel[3] == 0:
+                	pixel[0] = 255
+                	pixel[1] = 255
+                	pixel[2] = 255
+                else:
+                    # Note: pixel[i] is descending since OpenCV loads BGR
+                    r_bin = pixel[2] / BIN_SIZE
+                    g_bin = pixel[1] / BIN_SIZE
+                    b_bin = pixel[0] / BIN_SIZE
+                    hist[r_bin][g_bin][b_bin] += 1
+                    # Generate list of color keys for visualization
+                    if (r_bin,g_bin,b_bin) not in colors:
+                        colors.append( (r_bin,g_bin,b_bin) )
+            except (IndexError):
+                    r_bin = pixel[2] / BIN_SIZE
+                    g_bin = pixel[1] / BIN_SIZE
+                    b_bin = pixel[0] / BIN_SIZE
+                    hist[r_bin][g_bin][b_bin] += 140
+                    # Generate list of color keys for visualization
+                    if (r_bin,g_bin,b_bin) not in colors:
+                        colors.append( (r_bin,g_bin,b_bin) )
     if (save_plot):
         plot = visualize_chist(image, hist, colors, title)
         return hist, image, plot
