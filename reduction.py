@@ -7,8 +7,9 @@ import numpy as np
 
 # resize image to w pixels wide
 def resize_by_w(image, new_w):
-    r = new_w / image.shape[1] # calculate aspect ratio
+    r = new_w / float(image.shape[1]) # calculate aspect ratio
     dim = (new_w, int(image.shape[0] * r))
+    print r, dim
     image = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
     return image
 
@@ -123,13 +124,14 @@ def main():
         for el in imfilelist:
             sys.stdout.write(el)
             image = cv2.imread(el, cv2.IMREAD_UNCHANGED) # load original
-            if make_blank is True:
-                blank(image)
-                make_blank = False
+            # if make_blank is True:
+            #     blank(image)
+            #     make_blank = False
             # test square crop
+            image = resize_by_w(image, 200)
             image = crop_square(image)
             show(image, 1000)
-            save(image, el[:-4]+'_cropped.png')
+            save(image, el[:-4]+"_square"+".png")
     else:
         sys.exit("The path name does not exist")
 
