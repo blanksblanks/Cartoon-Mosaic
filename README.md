@@ -50,7 +50,7 @@ A photomosaic system that can generate a mosaic out of any base image is too lar
 
 __Figure 4. Example images in our database.__
 
-![fig4](figures/fig4.png)
+![fig4](_figures/fig4.png)
 
 This restriction will allow us to make photomosaic versions of the following image types:
 * Other 8-bit characters (ie. any image in the database)
@@ -59,7 +59,7 @@ This restriction will allow us to make photomosaic versions of the following ima
 
 __Figure 5. Example of a feasible (left) and unfeasible (right) source image for our system. Basically, the image on the right is too complex for the system to create a photomosaic version of.__
 
-![fig5](figures/fig5.png)
+![fig5](_figures/fig5.png)
 
 Our system will likely not be able to handle non-cartoonized images, such as photos of real people’s faces, or photos of animals, landscapes and buildings for example.
 
@@ -73,7 +73,7 @@ For color similarity, we will be working off our assignment 2 projects, which al
 
 __Figure 6. Example of pixelated image versus an 8-bit style graphic.__
 
-![fig6](figures/fig6.png)
+![fig6](_figures/fig6.png)
 
 Because cartoon images - at least, the ones we intend to use - tend to include a lot of hard shading and abrupt color changes, we plan to reuse tile images when necessary. However, because Shah et al. (2014) reported increases in mosaic patchiness at high thresholds, we will place an upper limit on how many times each tile can be reused for the creation of a given photomosaic. Perhaps an upper limit of 40-50 repeats per tile per photomosaic would be a suitable cutoff, since pixellated images tend to be far rougher than images of real people, places, and things, and therefore a higher threshold is probably needed to give rise to the patchy mosaic problem.
 
