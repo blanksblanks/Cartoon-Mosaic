@@ -29,3 +29,6 @@ class Base():
 				histogram, quadrant = S.color_histogram(quadrant, title)
 				row.append(histogram)
 			self.histograms.append(row)
+
+		self.rows = len(self.histograms)
+		self.cols = len(self.histograms[0])
