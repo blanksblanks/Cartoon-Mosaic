@@ -52,18 +52,24 @@ def main():
 
     # Find best tiles to compose base image
     the_chosen = []
-    for histogram in base.histograms:
-        closest = 1.0
-        for key in tiles:
-            tile = tiles[key]
-            distance = S.l1_color_norm(histogram, tiles[key].histogram)
-            if (distance < closest):
-                closest = distance
-                closest_tile = tile
-        the_chosen.append(closest_tile.title)
+    for row in base.histograms:
+        the_row = []
+        for histogram in row:
+	        closest = 1.0
+	        for key in tiles:
+	            tile = tiles[key]
+	            distance = S.l1_color_norm(histogram, tiles[key].histogram)
+	            if (distance < closest):
+	                closest = distance
+	                closest_tile = tile
+	        the_row.append(closest_tile.title)
+        print the_row
+        the_chosen.append(the_row)
 
     print "Okay we're done for now"
     print the_chosen
+
+
 
 
 if __name__ == "__main__": main()

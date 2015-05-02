@@ -18,6 +18,7 @@ class Base():
 		# Equivalent to for(int j=0; j<self.height-TILE_WIDTH; j+=TILE_WIDTH)
 		# Advantage of this way is if self.width%TILE_WIDTH != 0
 		for j in xrange(0, self.height-TILE_WIDTH, TILE_WIDTH):
+			row = []
 			for i in xrange(0, self.width-TILE_WIDTH, TILE_WIDTH):
 				start_y = j
 				end_y = j + TILE_WIDTH
@@ -26,4 +27,5 @@ class Base():
 				quadrant = R.crop(self.image, start_y, end_y, start_x, end_x)
 				title = "base" + str(end_x) + "-" + str(end_y)
 				histogram, quadrant = S.color_histogram(quadrant, title)
-				self.histograms.append(histogram)
+				row.append(histogram)
+			self.histograms.append(row)
