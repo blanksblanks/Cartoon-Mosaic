@@ -78,6 +78,14 @@ def edge_finder(image):
     image = cv2.Canny(image,100,200) # params: min, max vals
     return image
 
+# Replace all pixels with empty tiles
+def blank(image):
+    w,h = get_dimensions(image)
+    for i in xrange(h):
+        for j in xrange(w):
+            image[i][j] = [255, 255, 255, 0]
+    save(image, './0.png')
+
 # ============================================================
 # Helper Functions
 # ============================================================
@@ -102,9 +110,10 @@ def main():
     if len(sys.argv) < 2:
         sys.exit("Need to specify a path from which to read images")
 
-    global NUM_IM
     imageformat=".png"
     path = "./" + sys.argv[1]
+
+    make_blank = True
 
     # load image sequence
     if os.path.exists(path):
@@ -114,6 +123,10 @@ def main():
         for el in imfilelist:
             sys.stdout.write(el)
             image = cv2.imread(el, cv2.IMREAD_UNCHANGED) # load original
+            if make_blank is True:
+                blank(image)
+                make_blank = False
+            # test square crop
             image = crop_square(image)
             show(image, 1000)
             save(image, el[:-4]+'_cropped.png')
