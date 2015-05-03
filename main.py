@@ -81,7 +81,7 @@ def main():
 
     # Generate mosaic
     size = 30, 30
-    mosaic = Image.new('RGB', (base.cols*30, base.rows*30))
+    mosaic = Image.new('RGBA', (base.cols*30, base.rows*30))
     rowcount = 0
     #print "row: " + str(rowcount)
     for row in xrange(base.rows):
@@ -93,7 +93,9 @@ def main():
 	    #print str(sys.argv[2]) + "/" + str(tiles[idx].title) + str(sys.argv[3])
 	    path = os.path.abspath(str(sys.argv[2]) + "/" + str(tiles[idx].title) + str(sys.argv[3]))
 	    img = Image.open(path)
+	    #premultiply(img)
             img = img.resize((30, 30), Image.ANTIALIAS)
+	    #unmultiply(img)
 	    mosaic.paste(img, (30*colcount, 30*rowcount))
 	    colcount += 1
 	rowcount += 1
