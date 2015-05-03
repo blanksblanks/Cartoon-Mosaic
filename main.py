@@ -4,6 +4,7 @@ import numpy as np
 import tile as T
 import base as B
 import similarity as S
+from PIL import Image
 
 """
 1. open target image
@@ -79,20 +80,24 @@ def main():
         the_chosen.append(the_row)
 
     # Generate mosaic
+    size = 30, 30
+    mosaic = Image.new('RGB', (base.cols*30, base.rows*30))
+    rowcount = 0
+    #print "row: " + str(rowcount)
     for row in xrange(base.rows):
-        for col in xrange(base.cols):
-            idx = the_chosen[row][col]
-            img = tiles[idx].image
-            if col is 0:
-                imgs = img
-            else:
-	        	imgs = np.concatenate((imgs, img), axis=1)
-        if row is 0:
-            mosaic = imgs
-        else:
-            mosaic = np.concatenate((mosaic, imgs), axis=0)
-    cv2.imwrite("mosaic.png", mosaic)
-    cv2.imshow("Mosaic", mosaic)
+	colcount = 0
+	#print "column: " + str(colcount)
+	for col in xrange(base.cols):
+	    idx = the_chosen[row][col]
+       	    #img = tiles[idx].image
+	    #print str(sys.argv[2]) + "/" + str(tiles[idx].title) + str(sys.argv[3])
+	    path = os.path.abspath(str(sys.argv[2]) + "/" + str(tiles[idx].title) + str(sys.argv[3]))
+	    img = Image.open(path)
+            img = img.resize((30, 30), Image.ANTIALIAS)
+	    mosaic.paste(img, (30*colcount, 30*rowcount))
+	    colcount += 1
+	rowcount += 1
+    mosaic.save("mosaic.png")
 
     # print "Okay we're done for now"
     # print the_chosen
