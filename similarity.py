@@ -58,6 +58,44 @@ def visualize_chist(image, hist, colors, title):
     # show(plot, 100)
     # clear image
 
+def plot_histogram(hist, title):
+    """
+    Version of visualize_chist method that extrapolates for missing info
+    and returns path to plot image
+    """
+    colors = []
+    for r in xrange(BINS):
+        for g in xrange(BINS):
+            for b in xrange(BINS):
+                colors.append( (r,g,b) );
+    colors = sorted(colors, key=lambda c: -hist[(c[0])][(c[1])][(c[2])])
+    # Remove bins from sorted list of colors if their count is 0 in the histogram
+    for i in xrange(len(colors)):
+        c = colors[i]
+        if hist[(c[0])][(c[1])][(c[2])] == 0:
+            colors = colors[:i]
+            print 'found 0'
+            break
+        else:
+            print c, hist[(c[0])][(c[1])][(c[2])]
+    plt.rcParams['font.family']='Aller Light'
+    for idx, c in enumerate(colors):
+        r = c[0]
+        g = c[1]
+        b = c[2]
+        # print 'color, count:', hexencode(c, BIN_SIZE), hist[r][g][b]
+        plt.subplot(1,2,1).bar(idx, hist[r][g][b], color=hexencode(c, BIN_SIZE), edgecolor=hexencode(c, BIN_SIZE))
+        plt.xticks([])
+    dir_name = './color_hist/'
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+    path = dir_name+title+'.png'
+    plt.savefig(path, bbox_inches='tight')
+    plt.clf()
+    plt.close('all')
+    print path
+    return path
+
 def color_histogram(image, title, save_plot=False):
     '''
     Calculate the 3D color histogram of an image by counting the number
@@ -83,27 +121,21 @@ def color_histogram(image, title, save_plot=False):
             # have an alpha channel of 0
             # Note these if and/or statements work bc of short-circuit logic
             try:
+                # If transparent, change to white pixel
                 if pixel[3] == 0:
                 	pixel[0] = 255
                 	pixel[1] = 255
                 	pixel[2] = 255
-                else:
-                    # Note: pixel[i] is descending since OpenCV loads BGR
-                    r_bin = pixel[2] / BIN_SIZE
-                    g_bin = pixel[1] / BIN_SIZE
-                    b_bin = pixel[0] / BIN_SIZE
-                    hist[r_bin][g_bin][b_bin] += 1
-                    # Generate list of color keys for visualization
-                    if (r_bin,g_bin,b_bin) not in colors:
-                        colors.append( (r_bin,g_bin,b_bin) )
             except (IndexError):
-                    r_bin = pixel[2] / BIN_SIZE
-                    g_bin = pixel[1] / BIN_SIZE
-                    b_bin = pixel[0] / BIN_SIZE
-                    hist[r_bin][g_bin][b_bin] += 140
-                    # Generate list of color keys for visualization
-                    if (r_bin,g_bin,b_bin) not in colors:
-                        colors.append( (r_bin,g_bin,b_bin) )
+                pass # do nothing
+            # Note: pixel[i] is descending since OpenCV loads BGR
+            r_bin = pixel[2] / BIN_SIZE
+            g_bin = pixel[1] / BIN_SIZE
+            b_bin = pixel[0] / BIN_SIZE
+            hist[r_bin][g_bin][b_bin] += 1
+            # Generate list of color keys for visualization
+            if (r_bin,g_bin,b_bin) not in colors:
+                colors.append( (r_bin,g_bin,b_bin) )
     if (save_plot):
         plot = visualize_chist(image, hist, colors, title)
         return hist, image, plot
