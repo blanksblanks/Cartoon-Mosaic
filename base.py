@@ -2,7 +2,7 @@ import cv2
 import reduction as R
 import similarity as S
 
-TILE_WIDTH = 30
+TILE_WIDTH = 15
 
 class Base():
 	def __init__(self, path,percent=0):

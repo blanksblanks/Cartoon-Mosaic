@@ -34,7 +34,7 @@ def crop_square(image):
 		offset = (h - w) / 2
 		image = crop(image, offset, h-offset, 0, w)
 	# else it is already square
-	image = cv2.resize(image, (30, 30))
+	image = cv2.resize(image, (15, 15))
 	return image
 
 # 270: rotate image 90 degrees counterclockwise

@@ -34,11 +34,11 @@ def fill(img, title):
 			continue
 		if colors[0] > max:
 			max = colors[0]
-			dom = colors[1]	
+			dom = colors[1]
 	color = dom #dominant color
 	print "color: " + str(color)
 	pixels = img.load()
-	fill = Image.new('RGB', (30, 30))
+	fill = Image.new('RGB', (15, 15))
 	for y in range(img.size[1]):
 	     for x in range(img.size[0]):
 	          r, g, b, a = pixels[x, y]
@@ -122,7 +122,7 @@ def main():
 
     # Generate mosaic
     size = 30, 30
-    mosaic = Image.new('RGBA', (base.cols*30, base.rows*30))
+    mosaic = Image.new('RGBA', (base.cols*15, base.rows*15))
     rowcount = 0
     #print "row: " + str(rowcount)
     for row in xrange(base.rows):
@@ -132,9 +132,9 @@ def main():
 	    idx = the_chosen[row][col]
 	    path = os.path.abspath(str(sys.argv[2]) + "/" + str(tiles[idx].title) + str(sys.argv[3]))
 	    img = Image.open(path)
-            img = img.resize((30, 30), Image.ANTIALIAS)
+            img = img.resize((15, 15), Image.ANTIALIAS)
 	    img = fill(img, tiles[idx].title)
-	    mosaic.paste(img, (30*colcount, 30*rowcount))
+	    mosaic.paste(img, (15*colcount, 15*rowcount))
 	    colcount += 1
 	rowcount += 1
     mosaic.save("mosaic.png")
