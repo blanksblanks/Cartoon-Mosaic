@@ -17,6 +17,47 @@ from PIL import Image
 8. next
 """
 
+#fill background of image with dominant image color
+def fill(img, title):
+	img = img.convert("RGBA")
+	print "title: " + str(title)
+	poll = img.getcolors() #most frequently used colors
+	print "poll: " + str(poll)
+	max = 0
+	dom = None
+	for i in range(len(poll)):
+		colors = poll[i]
+		print "compare: " + str(colors)
+		if colors[1][3] != 255: #transparent
+			continue
+		if colors[1][0] == 49 and colors[1][1] == 49 and colors[1][2] == 49:
+			continue
+		if colors[0] > max:
+			max = colors[0]
+			dom = colors[1]	
+	color = dom #dominant color
+	print "color: " + str(color)
+	pixels = img.load()
+	fill = Image.new('RGB', (30, 30))
+	for y in range(img.size[1]):
+	     for x in range(img.size[0]):
+	          r, g, b, a = pixels[x, y]
+		  if a != 255:#transparent
+		       r = color[0]
+		       g = color[1]
+		       b = color[2]
+		       pixels[x,y] = (r,g,b,a)
+		  fill.putpixel((x, y), pixels[x,y])
+	fill.save(str(title) + "-rgb.png") #save the image
+	folder = os.path.dirname(os.path.realpath(__file__)) #now load it back in
+	files = os.listdir(folder)
+	for stuff in files:
+		if not os.path.isdir(stuff):
+			if stuff == str(title)+"-rgb.png":
+				path = str(title)+"-rgb.png"
+				img = Image.open(path)
+				return img
+
 def entitle(impath, path, format):
     start = len(path)+1
     end = len(format)*-1
@@ -51,7 +92,7 @@ def main():
         sys.exit("The path name does not exist")
 
     # Next, generate base image
-    base = B.Base(base_path, 300)
+    base = B.Base(base_path, 100)
 
     # TODO: improve poor efficiency of this algorithm
     # Find best tiles to compose base image
@@ -89,13 +130,10 @@ def main():
 	#print "column: " + str(colcount)
 	for col in xrange(base.cols):
 	    idx = the_chosen[row][col]
-       	    #img = tiles[idx].image
-	    #print str(sys.argv[2]) + "/" + str(tiles[idx].title) + str(sys.argv[3])
 	    path = os.path.abspath(str(sys.argv[2]) + "/" + str(tiles[idx].title) + str(sys.argv[3]))
 	    img = Image.open(path)
-	    #premultiply(img)
             img = img.resize((30, 30), Image.ANTIALIAS)
-	    #unmultiply(img)
+	    img = fill(img, tiles[idx].title)
 	    mosaic.paste(img, (30*colcount, 30*rowcount))
 	    colcount += 1
 	rowcount += 1
