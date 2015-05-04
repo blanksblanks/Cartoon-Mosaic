@@ -28,6 +28,8 @@ class Base():
 				quadrant = R.crop(self.image, start_y, end_y, start_x, end_x)
 				title = "base" + str(end_x) + "-" + str(end_y)
 				histogram, quadrant = S.color_histogram(quadrant, title)
+				# Optional, save histogram as bar graph and return saved path
+				plot_path = S.plot_histogram(histogram, title)
 				row.append(histogram)
 			self.histograms.append(row)
 

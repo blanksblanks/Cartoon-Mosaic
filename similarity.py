@@ -74,10 +74,7 @@ def plot_histogram(hist, title):
         c = colors[i]
         if hist[(c[0])][(c[1])][(c[2])] == 0:
             colors = colors[:i]
-            print 'found 0'
             break
-        else:
-            print c, hist[(c[0])][(c[1])][(c[2])]
     plt.rcParams['font.family']='Aller Light'
     for idx, c in enumerate(colors):
         r = c[0]
