@@ -17,4 +17,5 @@ class Tile():
 		self.width = len(self.image[0])
 		# Image is returned as well because its transparent pixels are adjusted
 		self.histogram, self.image = S.color_histogram(self.image, self.title)
+		plot_path = S.plot_histogram(self.histogram, self.title)
 		self.uses = 0
