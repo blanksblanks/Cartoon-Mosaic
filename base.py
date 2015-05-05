@@ -3,7 +3,7 @@ import reduction as R
 import similarity as S
 
 TILE_WIDTH = 30
-TILE_COLS = 50
+TILE_COLS = 30
 
 class Base():
 	def __init__(self, path):
@@ -17,10 +17,10 @@ class Base():
 		self.dominants = []
 		# Equivalent to for(int j=0; j<self.height-TILE_WIDTH; j+=TILE_WIDTH)
 		# Advantage of this way is if self.width%TILE_WIDTH != 0
-		for j in xrange(0, self.height-TILE_WIDTH, TILE_WIDTH):
+		for j in xrange(0, self.height, TILE_WIDTH):
 			hist_row = []
 			dom_row = []
-			for i in xrange(0, self.width-TILE_WIDTH, TILE_WIDTH):
+			for i in xrange(0, self.width, TILE_WIDTH):
 				start_y = j
 				end_y = j + TILE_WIDTH
 				start_x = i
@@ -36,6 +36,7 @@ class Base():
 				dom_row.append(dominants)
 			self.histograms.append(hist_row)
 			self.dominants.append(dom_row)
+			print "Row %d of %d" %((j/TILE_WIDTH)+1, self.height/TILE_WIDTH)
 
 		self.rows = len(self.histograms)
 		self.cols = len(self.histograms[0])

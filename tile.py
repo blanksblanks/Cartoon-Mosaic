@@ -4,6 +4,7 @@ import similarity as S
 from PIL import Image
 
 TILE_WIDTH = 30
+DISPLAY_WIDTH = 50
 
 class Tile():
 	def __init__(self, path, title):

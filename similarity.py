@@ -15,7 +15,7 @@ NUM_CLUSTERS = 7
 COL_RANGE = 256
 BINS = 8
 BIN_SIZE = int(COL_RANGE/BINS)
-DOM_COL_THRESH = 0.07
+DOM_COL_THRESH = 0.1
 
 # ============================================================
 # Analysis

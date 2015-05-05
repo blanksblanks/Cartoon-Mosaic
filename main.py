@@ -37,8 +37,14 @@ def main():
             sys.exit ("Need to specify a path containing " + format + " files")
         tiles = {} # init dictionary of tile objects
         dominants = {} # init dictionary of list of tiles by dominant color
-        for impath in imfilelist:
-            print(impath)
+        num_images = len(imfilelist)
+        if num_images > 500:
+            num_images = 500 # only look up first 500 images
+        for i in xrange(num_images):
+            impath = imfilelist[i]
+            # print(impath)
+            if ( (i+1)%50 == 0 or i == num_images-1 ):
+                print i+1, "out of", num_images, "images"
             imtitle = entitle(impath, tile_path, format)
             tile = T.Tile(impath, imtitle)
             tiles[imtitle] = tile
@@ -50,13 +56,15 @@ def main():
     else:
         sys.exit("The path name does not exist")
 
+    print ""
     # Next, generate base image
     print "Analyzing base image..."
     base = B.Base(base_path)
 
     # TODO: improve poor efficiency of this algorithm
     # Find best tiles to compose base image
-    print "Matching tile images with base image quadrants..."
+    print ""
+    print "Generating mosaic..."
     the_chosen = []
     history = {} # store histogram-best tile matches
     count = base.rows * base.cols
@@ -112,20 +120,14 @@ def main():
     #print "column: " + str(colcount)
         for col in xrange(base.cols):
             idx = the_chosen[row][col]
-            # Reopen image in PIL format
             tile = tiles[idx]
             img = tile.display
-            # path = os.path.abspath(str(sys.argv[2]) + "/" + str(tiles[idx].title) + str(sys.argv[3]))
-            # img = Image.open(path)
-            # img = crop_square(img, size)
-            # img = img.resize(size, Image.ANTIALIAS)
-            # Optional:
-            # img = fill(img, tiles[idx].title)
             mosaic.paste(img, (TILE_WIDTH*colcount, TILE_WIDTH*rowcount))
             colcount += 1
         rowcount += 1
     mosaic.save("mosaic.png")
 
+    print ""
     print "Okay we're done for now"
     f = open('mosaic_keys.txt', 'w')
     f.write(str(the_chosen))
