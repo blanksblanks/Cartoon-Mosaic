@@ -13,7 +13,7 @@ from sklearn.cluster import KMeans
 NUM_IM = 40
 NUM_CLUSTERS = 7
 COL_RANGE = 256
-BINS = 8
+BINS = 4
 BIN_SIZE = int(COL_RANGE/BINS)
 DOM_COL_THRESH = 0.1
 
@@ -87,6 +87,7 @@ def dominant_colors(hist, colors):
             dominant_colors.append( (r,g,b) )
         elif p > DOM_COL_THRESH * 0.5 and (r,g,b) == (0,0,0):
             break
+        # Consider handling white also
     # print dominant_colors
     return dominant_colors
 
