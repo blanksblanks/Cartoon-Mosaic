@@ -127,7 +127,8 @@ def main():
     mosaic.save("mosaic.png")
 
     print "Okay we're done for now"
-    print the_chosen
+    f = open('mosaic_keys.txt', 'w')
+    f.write(str(the_chosen))
     print "Expensive operations:", expensive_count, "of", count, ":", expensive_count/count
     print "Dominant operations:", dom_count, "of", count, ":", dom_count/count
     print "History operations:", history_count, "of", count, ":", history_count/count
