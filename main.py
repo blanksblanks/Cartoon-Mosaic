@@ -79,12 +79,12 @@ def main():
         for j in xrange(base.cols):
             skip = False
             histogram = hist_row[j]
-            # for dom in dom_row[j]:
-            #     if dom in dominants:
-            #         closest_tile = random.choice(dominants[dom])
-            #         skip = True
-            #         dom_count += 1
-            #         break
+            for dom in dom_row[j]:
+                if dom in dominants:
+                    closest_tile = random.choice(dominants[dom])
+                    skip = True
+                    dom_count += 1
+                    break
             if (skip == False):
                 closest = 100.0
                 if str(histogram) in history:

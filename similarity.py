@@ -83,9 +83,9 @@ def dominant_colors(hist, colors):
     for (r,g,b) in colors:
         p = round( (float(hist[r][g][b]) / num_pixels), 3)
         # print p,
-        if p > DOM_COL_THRESH and (r,g,b) != (0,0,0):
+        if p > DOM_COL_THRESH and (r,g,b) != (0,0,0) and (r,g,b) != (BINS-1,BINS-1,BINS-1):
             dominant_colors.append( (r,g,b) )
-        elif p > DOM_COL_THRESH * 0.5 and (r,g,b) == (0,0,0):
+        else:
             break
         # Consider handling white also
     # print dominant_colors
