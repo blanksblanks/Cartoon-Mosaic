@@ -36,7 +36,7 @@ class Base():
 				dom_row.append(dominants)
 			self.histograms.append(hist_row)
 			self.dominants.append(dom_row)
-			print "Row %d of %d" %((j/TILE_WIDTH)+1, self.height/TILE_WIDTH)
+			print "%d out of %d rows" %((j/TILE_WIDTH)+1, self.height/TILE_WIDTH)
 
 		self.rows = len(self.histograms)
 		self.cols = len(self.histograms[0])
