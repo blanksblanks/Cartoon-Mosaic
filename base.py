@@ -29,7 +29,7 @@ class Base():
 				histogram, quadrant, colors = S.color_histogram(quadrant, title)
 				# Optional, save histogram as bar graph and return saved path
 				plot_path = S.plot_histogram(histogram, title, colors)
-				dominants = S.dominant_color(histogram, colors)
+				dominants = S.dominant_colors(histogram, colors)
 				hist_row.append(histogram)
 				dom_row.append(dominants)
 			self.histograms.append(hist_row)

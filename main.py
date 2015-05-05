@@ -1,5 +1,4 @@
 from __future__ import division
-
 import sys, os
 import cv2
 import numpy as np
@@ -8,20 +7,9 @@ import base as B
 import similarity as S
 from PIL import Image
 
-"""
-1. open target image
-2. 30 x 30 images now
-3. new = souce width x cell width
-4. resize new width
-5. for every cell width calculate histogram
-6. find most similar cell
-7. place cell in new pic
-8. next
-"""
-
 TILE_WIDTH = 30
 
-#fill background of image with dominant image color
+# Fill background of image with dominant image color
 def fill(img, title):
     img = img.convert("RGBA")
     print "title: " + str(title)
@@ -165,10 +153,12 @@ def main():
         for col in xrange(base.cols):
             idx = the_chosen[row][col]
             # Reopen image in PIL format
-            path = os.path.abspath(str(sys.argv[2]) + "/" + str(tiles[idx].title) + str(sys.argv[3]))
-            img = Image.open(path)
-            img = crop_square(img, size)
-            img = img.resize(size, Image.ANTIALIAS)
+            tile = tiles[idx]
+            img = tile.display
+            # path = os.path.abspath(str(sys.argv[2]) + "/" + str(tiles[idx].title) + str(sys.argv[3]))
+            # img = Image.open(path)
+            # img = crop_square(img, size)
+            # img = img.resize(size, Image.ANTIALIAS)
             # Optional:
             # img = fill(img, tiles[idx].title)
             mosaic.paste(img, (TILE_WIDTH*colcount, TILE_WIDTH*rowcount))
