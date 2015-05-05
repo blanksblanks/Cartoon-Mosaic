@@ -31,6 +31,7 @@ class Base():
 				# Optional, save histogram as bar graph and return saved path
 				# plot_path = S.plot_histogram(histogram, title, colors)
 				dominants = S.dominant_colors(histogram, colors)
+				# dominants = S.kmeans_dominance(self.image)
 				hist_row.append(histogram)
 				dom_row.append(dominants)
 			self.histograms.append(hist_row)

@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import gridspec as gridspec
+from sklearn.cluster import KMeans
 
 # ============================================================
 # Constants
@@ -82,11 +83,38 @@ def dominant_colors(hist, colors):
     for (r,g,b) in colors:
         p = round( (float(hist[r][g][b]) / num_pixels), 3)
         # print p,
-        if p > DOM_COL_THRESH:
+        if p > DOM_COL_THRESH and (r,g,b) != (0,0,0):
             dominant_colors.append( (r,g,b) )
-        else:
+        elif p > DOM_COL_THRESH * 0.5 and (r,g,b) == (0,0,0):
             break
+    # print dominant_colors
     return dominant_colors
+
+def kmeans_dominance(image):
+    # reshape the image to be a list of pixels
+    image = image.reshape((image.shape[0] * image.shape[1], 3))
+    # cluster the pixel intensities
+    clt = KMeans(n_clusters = 3)
+    clt.fit(image)
+    # grab the number of different clusters and create a histogram
+    # based on the number of pixels assigned to each cluster
+    numLabels = np.arange(0, len(np.unique(clt.labels_)) + 1)
+    (hist, _) = np.histogram(clt.labels_, bins = numLabels)
+
+    # normalize the histogram, such that it sums to one
+    hist = hist.astype("float")
+    hist /= hist.sum()
+    centroids = clt.cluster_centers_
+    colors = []
+    for (percent, color) in zip(hist, centroids):
+        # print percent
+        # print color.astype("uint8").tolist()
+        color = color.astype("uint8").tolist()
+        color = [c/BIN_SIZE for c in color]
+        # print color
+        colors.append(tuple(color))
+    # print colors
+    return colors
 
 # ============================================================
 # Visualization

@@ -21,5 +21,6 @@ class Tile():
 		self.histogram, self.image, self.colors = S.color_histogram(self.image, self.title)
 		# plot_path = S.plot_histogram(self.histogram, self.title, self.colors)
 		self.dominants = S.dominant_colors(self.histogram, self.colors)
+		# self.dominants = S.kmeans_dominance(self.image)
 		# print self.dominants
 		self.uses = 0
