@@ -19,7 +19,7 @@ class Tile():
 		self.height = len(self.image)
 		self.width = len(self.image[0])
 		self.histogram, self.image, self.colors = S.color_histogram(self.image, self.title)
-		plot_path = S.plot_histogram(self.histogram, self.title, self.colors)
+		# plot_path = S.plot_histogram(self.histogram, self.title, self.colors)
 		self.dominants = S.dominant_colors(self.histogram, self.colors)
-		print self.dominants
+		# print self.dominants
 		self.uses = 0

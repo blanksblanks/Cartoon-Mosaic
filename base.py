@@ -3,13 +3,14 @@ import reduction as R
 import similarity as S
 
 TILE_WIDTH = 30
+TILE_COLS = 50
 
 class Base():
-	def __init__(self, path,percent=0):
+	def __init__(self, path):
 		self.path = path
 		self.image = cv2.imread(path, cv2.IMREAD_UNCHANGED)
-		if percent != 0:
-			self.image = R.resize_by_p(self.image, percent)
+		# Will actually discount second value
+		self.image = R.resize_by_w(self.image, TILE_WIDTH*TILE_COLS)
 		self.height = len(self.image)
 		self.width = len(self.image[0])
 		self.histograms = []
@@ -28,7 +29,7 @@ class Base():
 				title = "base" + str(end_x) + "-" + str(end_y)
 				histogram, quadrant, colors = S.color_histogram(quadrant, title)
 				# Optional, save histogram as bar graph and return saved path
-				plot_path = S.plot_histogram(histogram, title, colors)
+				# plot_path = S.plot_histogram(histogram, title, colors)
 				dominants = S.dominant_colors(histogram, colors)
 				hist_row.append(histogram)
 				dom_row.append(dominants)

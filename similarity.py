@@ -137,7 +137,7 @@ def plot_histogram(hist, title, colors=None, image=None):
     plt.savefig(path, bbox_inches='tight')
     plt.clf()
     plt.close('all')
-    print '\n', path
+    print path
     return path
 
 # ============================================================

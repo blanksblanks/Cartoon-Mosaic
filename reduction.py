@@ -11,7 +11,7 @@ from PIL import Image
 def resize_by_w(image, new_w):
 	r = new_w / float(image.shape[1]) # calculate aspect ratio
 	dim = (int(new_w), int(image.shape[0] * r))
-	print r, dim
+	# print r, dim
 	image = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
 	return image
 
