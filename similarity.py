@@ -1,11 +1,9 @@
 import os
 import sys
-import time
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import gridspec as gridspec
-import reduction
 
 # ============================================================
 # Constants
@@ -16,84 +14,13 @@ NUM_CLUSTERS = 7
 COL_RANGE = 256
 BINS = 8
 BIN_SIZE = int(COL_RANGE/BINS)
-BLK_THRESH = 40
-IMG_H = 60
-IMG_W = 89
-LAP_BINS = 128
-LAP_BIN_SZ = int(COL_RANGE*8)/LAP_BINS
+DOM_COL_THRESH = 0.07
 
 # ============================================================
-# Gross Color Matching
+# Analysis
 # ============================================================
 
-def hexencode(rgb, factor):
-    """Convert RGB tuple to hexadecimal color code."""
-    r = rgb[0]*factor
-    g = rgb[1]*factor
-    b = rgb[2]*factor
-    return '#%02x%02x%02x' % (r,g,b)
-
-def visualize_chist(image, hist, colors, title):
-    colors = sorted(colors, key=lambda c: -hist[(c[0])][(c[1])][(c[2])])
-    plt.rcParams['font.family']='Aller Light'
-    for idx, c in enumerate(colors):
-        r = c[0]
-        g = c[1]
-        b = c[2]
-        # print 'color, count:', hexencode(c, BIN_SIZE), hist[r][g][b]
-        plt.subplot(1,2,1).bar(idx, hist[r][g][b], color=hexencode(c, BIN_SIZE), edgecolor=hexencode(c, BIN_SIZE))
-        plt.xticks([])
-        # plt.subplot(1,2,2),plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        # plt.xticks([]),plt.yticks([])
-    dir_name = './color_hist/'
-    if not os.path.exists(dir_name):
-        os.makedirs(dir_name)
-    title = dir_name+title+'.png'
-    plt.savefig(title, bbox_inches='tight')
-    plt.clf()
-    plt.close('all')
-    print title
-    plot = cv2.imread(title, cv2.IMREAD_UNCHANGED)
-    return plot
-    # show(plot, 100)
-    # clear image
-
-def plot_histogram(hist, title):
-    """
-    Version of visualize_chist method that extrapolates for missing info
-    and returns path to plot image
-    """
-    colors = []
-    for r in xrange(BINS):
-        for g in xrange(BINS):
-            for b in xrange(BINS):
-                colors.append( (r,g,b) );
-    colors = sorted(colors, key=lambda c: -hist[(c[0])][(c[1])][(c[2])])
-    # Remove bins from sorted list of colors if their count is 0 in the histogram
-    for i in xrange(len(colors)):
-        c = colors[i]
-        if hist[(c[0])][(c[1])][(c[2])] == 0:
-            colors = colors[:i]
-            break
-    plt.rcParams['font.family']='Aller Light'
-    for idx, c in enumerate(colors):
-        r = c[0]
-        g = c[1]
-        b = c[2]
-        # print 'color, count:', hexencode(c, BIN_SIZE), hist[r][g][b]
-        plt.subplot(1,2,1).bar(idx, hist[r][g][b], color=hexencode(c, BIN_SIZE), edgecolor=hexencode(c, BIN_SIZE))
-        plt.xticks([])
-    dir_name = './color_hist/'
-    if not os.path.exists(dir_name):
-        os.makedirs(dir_name)
-    path = dir_name+title+'.png'
-    plt.savefig(path, bbox_inches='tight')
-    plt.clf()
-    plt.close('all')
-    print path
-    return path
-
-def color_histogram(image, title, save_plot=False):
+def color_histogram(image, title):
     '''
     Calculate the 3D color histogram of an image by counting the number
     of RGB values in a set number of bins
@@ -112,19 +39,14 @@ def color_histogram(image, title, save_plot=False):
     for i in xrange(h):
         for j in xrange(w):
             pixel = image[i][j]
-            # print i,j,pixel
-            # Do not count background pixels
-            # All transparent pixel, [206 140 90 0], [255 255 255 0]
-            # have an alpha channel of 0
-            # Note these if and/or statements work bc of short-circuit logic
-            try:
-                # If transparent, change to white pixel
+            # Handling different image formats
+            try: # If transparent (alpha channel = 0), change to white pixel
                 if pixel[3] == 0:
-                	pixel[0] = 255
-                	pixel[1] = 255
-                	pixel[2] = 255
+                    pixel[0] = 255
+                    pixel[1] = 255
+                    pixel[2] = 255
             except (IndexError):
-                pass # do nothing
+                pass # do nothing if alpha channel is missing
             # Note: pixel[i] is descending since OpenCV loads BGR
             r_bin = pixel[2] / BIN_SIZE
             g_bin = pixel[1] / BIN_SIZE
@@ -133,11 +55,10 @@ def color_histogram(image, title, save_plot=False):
             # Generate list of color keys for visualization
             if (r_bin,g_bin,b_bin) not in colors:
                 colors.append( (r_bin,g_bin,b_bin) )
-    if (save_plot):
-        plot = visualize_chist(image, hist, colors, title)
-        return hist, image, plot
-    else:
-        return hist, image
+    # Sort colors from highest count to lowest counts
+    colors = sorted(colors, key=lambda c: -hist[(c[0])][(c[1])][(c[2])])
+    # Return image in case transparent values were changed
+    return hist, image, colors
 
 def l1_color_norm(h1, h2):
     diff = 0
@@ -152,7 +73,82 @@ def l1_color_norm(h1, h2):
     # print 'diff, sum and distance:', diff, sum, distance
     return l1_norm
 
+def dominant_colors(hist, colors):
+    """Helper method to determine percentages of color pixels in a picture"""
+    num_pixels = 0
+    dominant_colors = []
+    for (r,g,b) in colors:
+        num_pixels += hist[r][g][b]
+    for (r,g,b) in colors:
+        p = round( (float(hist[r][g][b]) / num_pixels), 3)
+        # print p,
+        if p > DOM_COL_THRESH:
+            dominant_colors.append( (r,g,b) )
+        else:
+            break
+    return dominant_colors
+
+# ============================================================
+# Visualization
+# ============================================================
+
+def hexencode(rgb, factor):
+    """Convert RGB tuple to hexadecimal color code."""
+    r = rgb[0]*factor
+    g = rgb[1]*factor
+    b = rgb[2]*factor
+    return '#%02x%02x%02x' % (r,g,b)
+
+def plot_histogram(hist, title, colors=None, image=None):
+    """
+    Visualize histograms as bar graphs where each bar is color-coded
+    and sorted by greatest count to least count
+    """
+    # If information not given, deduce list of colors
+    if (colors == None):
+        colors = []
+        for r in xrange(BINS):
+            for g in xrange(BINS):
+                for b in xrange(BINS):
+                    colors.append( (r,g,b) );
+        colors = sorted(colors, key=lambda c: -hist[(c[0])][(c[1])][(c[2])])
+        # Remove bins from sorted list of colors if their count is 0 in the histogram
+        for i in xrange(len(colors)):
+            c = colors[i]
+            if hist[(c[0])][(c[1])][(c[2])] == 0:
+                colors = colors[:i]
+                break
+    # Generate bar graph
+    plt.rcParams['font.family']='Aller Light'
+    for idx, c in enumerate(colors):
+        r, g, b = c
+        # print c, ':', hist[r][g][b], ';',
+        plt.subplot(1,2,1).bar(idx, hist[r][g][b], color=hexencode(c, BIN_SIZE), edgecolor=hexencode(c, BIN_SIZE))
+        plt.xticks([])
+        # Optional, append image on the right
+        if image != None:
+            plt.subplot(1,2,2),plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+            plt.xticks([]),plt.yticks([])
+    # Save plot
+    dir_name = './color_hist/'
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+    path = dir_name+title+'.png'
+    plt.savefig(path, bbox_inches='tight')
+    plt.clf()
+    plt.close('all')
+    print '\n', path
+    return path
+
+# ============================================================
+# Intra-set Analysis
+# ============================================================
+
 def calc_cdistance(chists):
+    """
+    Find distance between every image pair in the set by calculating
+    L1 norm
+    """
     chist_dis = {}
     for i in xrange(NUM_IM):
         for j in xrange(i, NUM_IM):
@@ -208,6 +204,10 @@ def find_four(chist_dis):
     # print "results: ", len(results), #results
     # print "best, worst", best, worst
     return indices
+
+# ============================================================
+# Intra-Set Visualization
+# ============================================================
 
 def septuple_stitch_h(images, titles, dir_name, cresults, cdistances, cvt):
     plt.rcParams['font.family']='Aller Light'
@@ -267,6 +267,10 @@ def four_stitch_h(images, titles, cresults, dir_name):
         plt.clf()
         plt.close('all')
 
+# ============================================================
+# Testing
+# ============================================================
+
 def main():
 
     # Check if user has provided a directory argument
@@ -322,11 +326,12 @@ def main():
         cresults.extend(results)
         cdistances.extend(distances)
 
-    # Find set of 4 most different and 4 most similar images
-    # cfour = find_four(chist_dis)
-
+    # Visualize septuples of best and worst matches by image and histogram visualizations
     septuple_stitch_h(images, titles, './color_sim/', cresults, cdistances, 1)
     septuple_stitch_h(chist_images, titles, './color_hist_sim/', cresults, None, 1)
+
+    # Find set of 4 most different and 4 most similar images
+    # cfour = find_four(chist_dis)
 
 
     # Display four best and four worst, by color and by texture
