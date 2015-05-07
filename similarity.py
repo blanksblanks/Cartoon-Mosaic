@@ -2,9 +2,11 @@ import os
 import sys
 import cv2
 import numpy as np
+from PIL import Image
 from matplotlib import pyplot as plt
 from matplotlib import gridspec as gridspec
 from sklearn.cluster import KMeans
+import operator
 
 # ============================================================
 # Constants
@@ -14,12 +16,29 @@ NUM_IM = 40
 NUM_CLUSTERS = 7
 COL_RANGE = 256
 BINS = 4
+gBINS = BINS*4 #need more bins for grayscale since there's only one axis
 BIN_SIZE = int(COL_RANGE/BINS)
+gBIN_SIZE = int(COL_RANGE/gBINS)
 DOM_COL_THRESH = 0.1
 
 # ============================================================
 # Analysis
 # ============================================================
+
+def grayscale_histogram(image, title):
+    grayscale = []
+    h = len(image)
+    w = len(image[0])
+    hist = np.zeros(shape=(gBINS))
+    for i in xrange(h):
+        for j in xrange(w):
+            pixel = image[i, j]
+            gray = operator.add(int(pixel[0]), int(pixel[1]))
+            gray = operator.add(gray, int(pixel[2]))
+            gray = gray/3
+            g_bin = gray/gBIN_SIZE
+            hist[g_bin] += 1
+    return hist
 
 def color_histogram(image, title):
     '''
@@ -72,6 +91,17 @@ def l1_color_norm(h1, h2):
     l1_norm = diff / 2.0 / total
     similarity = 1 - l1_norm
     # print 'diff, sum and distance:', diff, sum, distance
+    return l1_norm
+
+def l1_gray_norm(h1, h2):
+    diff = 0
+    total = 0
+    #print h1
+    #print h2
+    for g in xrange(0, gBINS):
+        diff += abs(h1[g]-h2[g])
+        total += h1[g]+h2[g]
+    l1_norm = diff/2.0/total
     return l1_norm
 
 def dominant_colors(hist, colors):

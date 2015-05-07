@@ -9,6 +9,7 @@ import similarity as S
 from PIL import Image
 
 TILE_WIDTH = 30
+ALPHA = 0.0
 
 def entitle(impath, path, format):
     start = len(path)+1
@@ -26,6 +27,7 @@ def main():
     base_path = sys.argv[1]
     format = sys.argv[1][-4:]
     tile_path = sys.argv[2]
+
     if len(sys.argv) is 4:
         format = sys.argv[3]
 
@@ -48,11 +50,11 @@ def main():
             imtitle = entitle(impath, tile_path, format)
             tile = T.Tile(impath, imtitle)
             tiles[imtitle] = tile
-            for color in tile.dominants:
+            """for color in tile.dominants:
                 if color in dominants:
                     dominants[color].append(tile)
                 else:
-                    dominants[color] = [tile]
+                    dominants[color] = [tile]"""
     else:
         sys.exit("The path name does not exist")
 
@@ -74,45 +76,20 @@ def main():
 
     for i in xrange(base.rows):
         hist_row = base.histograms[i]
-        dom_row = base.dominants[i]
+        grayscales = base.grayscales[i]
+        #dom_row = base.dominants[i]
         the_row = []
         for j in xrange(base.cols):
             skip = False
             histogram = hist_row[j]
-            for dom in dom_row[j]:
+            graygram = grayscales[j]
+            """for dom in dom_row[j]:
                 if dom in dominants:
                     closest_tile = random.choice(dominants[dom])
                     skip = True
                     dom_count += 1
-                    break
+                    break"""
             if (skip == False):
-            # I was attempting to fix the problem of repeating tiles by creating
-            # a sorted list of closest tiles by histograms and choosing a random
-            # one for "closest tile" each time... but the results were very wrong
-            #     if str(histogram) in history:
-            #         closest = history[str(histogram)]
-            #         closest_tile = random.choice(closest)
-            #         # This constant-time lookup saves a lot of calculations
-            #         history_count += 1
-            #     else:
-            #             distances = {}
-            #             for title in tiles:
-            #                 tile = tiles[title]
-            #                 distance = S.l1_color_norm(histogram, tile.histogram)
-            #                 # sorted([(value,key) for (key,value) in mydict.items()])
-            #                 distances[title] = distance
-            #             # 0.49 seems to be a good thresh value if we want to do it like that
-            #             # For now, save top 3
-            #             closest = sorted([(key) for (key,value) in distances.items()])[:5]
-            #             print closest
-            #             closest_dis = sorted([(value) for (key,value) in distances.items()])
-            #             print closest_dis[:5]
-            #             # Store closest
-            #             history[str(histogram)] = closest
-            #             closest_tile = random.choice(closest)
-            #             expensive_count += 1
-            # the_row.append(closest_tile)
-            # When closest is only one option
                 closest = 100
                 if str(histogram) in history:
                     closest_tile = history[str(histogram)]
@@ -121,7 +98,9 @@ def main():
                 else:
                     for key in tiles:
                         tile = tiles[key]
-                        distance = S.l1_color_norm(histogram, tile.histogram)
+                        dcolor = S.l1_color_norm(histogram, tile.histogram)
+                        dgray = S.l1_gray_norm(graygram, tile.gray)
+                        distance = ALPHA*dcolor + (1-ALPHA)*dgray
                         # Why are so many 0.5?
                         if (distance < closest):
                             closest = distance
@@ -134,10 +113,15 @@ def main():
         # print the_row
         print "%d out of %d rows" %(len(the_chosen), base.rows)
 
-
     # Generate mosaic
     size = TILE_WIDTH, TILE_WIDTH
-    mosaic = Image.new('RGBA', (base.cols*TILE_WIDTH, base.rows*TILE_WIDTH))
+    print ALPHA
+    if ALPHA == 0:#grayscale mosaic
+        print "GRAY"
+        mosaic = Image.new('L', (base.cols*TILE_WIDTH, base.rows*TILE_WIDTH))
+    else:
+        print "COLOR"
+        mosaic = Image.new('RGBA', (base.cols*TILE_WIDTH, base.rows*TILE_WIDTH))
     rowcount = 0
     #print "row: " + str(rowcount)
     for row in xrange(base.rows):
@@ -159,6 +143,5 @@ def main():
     print "Expensive operations:", expensive_count, "of", count, ":", expensive_count/count
     print "Dominant operations:", dom_count, "of", count, ":", dom_count/count
     print "History operations:", history_count, "of", count, ":", history_count/count
-
 
 if __name__ == "__main__": main()
