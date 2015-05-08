@@ -20,7 +20,7 @@ class Base():
 		# Advantage of this way is if self.width%TILE_WIDTH != 0
 		for j in xrange(0, self.height, TILE_WIDTH):
 			hist_row = []
-			dom_row = []
+			# dom_row = []
 			gray_row = []
 			for i in xrange(0, self.width, TILE_WIDTH):
 				start_y = j
@@ -31,15 +31,15 @@ class Base():
 				title = "base" + str(end_x) + "-" + str(end_y)
 				histogram, quadrant, colors = S.color_histogram(quadrant, title)
 				grayscale = S.grayscale_histogram(quadrant, title)
-				# Optional, save histogram as bar graph and return saved path
+				# Optional, save histogram as bar graph; or record dominant colors
 				# plot_path = S.plot_histogram(histogram, title, colors)
-				dominants = S.dominant_colors(histogram, colors)
+				# dominants = S.dominant_colors(histogram, colors)
 				# dominants = S.kmeans_dominance(self.image)
 				hist_row.append(histogram)
-				dom_row.append(dominants)
+				# dom_row.append(dominants)
 				gray_row.append(grayscale)
 			self.histograms.append(hist_row)
-			self.dominants.append(dom_row)
+			# self.dominants.append(dom_row)
 			self.grayscales.append(gray_row)
 			print "%d out of %d rows" %((j/TILE_WIDTH)+1, self.height/TILE_WIDTH)
 

@@ -8,7 +8,6 @@ import base as B
 import similarity as S
 from PIL import Image
 
-TILE_WIDTH = 30
 ALPHA = 0.0
 
 def entitle(impath, path, format):
@@ -21,7 +20,7 @@ def main():
     # Check if user has provided a base image and tile library
     if len(sys.argv) < 2:
         sys.exit("Usage: python main.py base-image-path tile-directory-path tile-format\n \
-                  Example: python main.py nyan.png 151 .png")
+                  Example: python main.py A3.png _extras/jb .png")
 
     # Parse command line args
     base_path = sys.argv[1]
@@ -59,11 +58,11 @@ def main():
         sys.exit("The path name does not exist")
 
     print ""
-    # Next, generate base image
+
+    # Next, analyze base image
     print "Analyzing base image..."
     base = B.Base(base_path)
 
-    # TODO: improve poor efficiency of this algorithm
     # Find best tiles to compose base image
     print ""
     print "Generating mosaic..."
@@ -83,7 +82,8 @@ def main():
             skip = False
             histogram = hist_row[j]
             graygram = grayscales[j]
-            """for dom in dom_row[j]:
+            """ Optional: use dominant colors method
+            for dom in dom_row[j]:
                 if dom in dominants:
                     closest_tile = random.choice(dominants[dom])
                     skip = True
@@ -101,7 +101,6 @@ def main():
                         dcolor = S.l1_color_norm(histogram, tile.histogram)
                         dgray = S.l1_gray_norm(graygram, tile.gray)
                         distance = ALPHA*dcolor + (1-ALPHA)*dgray
-                        # Why are so many 0.5?
                         if (distance < closest):
                             closest = distance
                             closest_tile = tile
@@ -114,14 +113,14 @@ def main():
         print "%d out of %d rows" %(len(the_chosen), base.rows)
 
     # Generate mosaic
-    size = TILE_WIDTH, TILE_WIDTH
+    size = tile.display.size # any tile will have the same size
     print ALPHA
-    if ALPHA == 0:#grayscale mosaic
+    if ALPHA == 0: #grayscale mosaic
         print "GRAY"
-        mosaic = Image.new('L', (base.cols*TILE_WIDTH, base.rows*TILE_WIDTH))
+        mosaic = Image.new('L', (base.cols*size[0], base.rows*size[1]))
     else:
         print "COLOR"
-        mosaic = Image.new('RGBA', (base.cols*TILE_WIDTH, base.rows*TILE_WIDTH))
+        mosaic = Image.new('RGBA', (base.cols*size[0], base.rows*size[1]))
     rowcount = 0
     #print "row: " + str(rowcount)
     for row in xrange(base.rows):
@@ -131,7 +130,7 @@ def main():
             idx = the_chosen[row][col]
             tile = tiles[idx]
             img = tile.display
-            mosaic.paste(img, (TILE_WIDTH*colcount, TILE_WIDTH*rowcount))
+            mosaic.paste(img, (colcount*size[0], rowcount*size[1]))
             colcount += 1
         rowcount += 1
     mosaic.save("mosaic.png")
