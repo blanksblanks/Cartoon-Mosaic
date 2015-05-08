@@ -8,7 +8,7 @@ import base as B
 import similarity as S
 from PIL import Image
 
-ALPHA = 0.0
+ALPHA = 1.0
 
 def entitle(impath, path, format):
     start = len(path)+1
@@ -113,13 +113,13 @@ def main():
         print "%d out of %d rows" %(len(the_chosen), base.rows)
 
     # Generate mosaic
+    print ""
     size = tile.display.size # any tile will have the same size
-    print ALPHA
     if ALPHA == 0: #grayscale mosaic
-        print "GRAY"
+        print "Your GRAYSCALE MOSAIC will be done soon."
         mosaic = Image.new('L', (base.cols*size[0], base.rows*size[1]))
     else:
-        print "COLOR"
+        print "Your COLORFUL MOSAIC will be done soon."
         mosaic = Image.new('RGBA', (base.cols*size[0], base.rows*size[1]))
     rowcount = 0
     #print "row: " + str(rowcount)

@@ -4,6 +4,7 @@ import similarity as S
 from PIL import Image
 
 TILE_WIDTH = 30
+DISPLAY_WIDTH = 150
 
 class Tile():
 	def __init__(self, path, title):
@@ -20,12 +21,13 @@ class Tile():
 
 		"""Open with PIL format for display purposes"""
 		self.display = Image.open(path)
-		(width, height) = self.display.size
+		self.display = R.resize_square(self.display, (DISPLAY_WIDTH, DISPLAY_WIDTH) )
 		# Crop image to square (simply set size for last param if you want 30x30 tiles)
-		if (width < height):
-			self.display = R.resize_square(self.display, (width, width) )
-		elif (height < width):
-			self.display = R.resize_square(self.display, (height, height) )
+		# (width, height) = self.display.size
+		# if (width < height):
+		# 	self.display = R.resize_square(self.display, (width, width) )
+		# elif (height < width):
+		# 	self.display = R.resize_square(self.display, (height, height) )
 		# self.display = R.fill(self.display, self.title)
 
 		"""Additional options (extra runtime)"""
