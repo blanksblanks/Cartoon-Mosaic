@@ -122,10 +122,10 @@ def main():
         print "Your COLORFUL MOSAIC will be done soon."
         mosaic = Image.new('RGBA', (base.cols*size[0], base.rows*size[1]))
     rowcount = 0
-    #print "row: " + str(rowcount)
+    # print "row: " + str(rowcount)
     for row in xrange(base.rows):
         colcount = 0
-    #print "column: " + str(colcount)
+    # print "column: " + str(colcount)
         for col in xrange(base.cols):
             idx = the_chosen[row][col]
             tile = tiles[idx]
@@ -138,6 +138,10 @@ def main():
     f = open('mosaic_keys.txt', 'w')
     f.write(str(the_chosen))
 
+    # Calculate percentage of database used and print stats
+    print ""
+    n = len(set([img for sublist in the_chosen for img in sublist]))
+    print "%f : %d out %d images from tile library used" %(round((float(n)/len(tiles)), 3), n, len(tiles))
     print ""
     print "Expensive operations:", expensive_count, "of", count, ":", expensive_count/count
     print "Dominant operations:", dom_count, "of", count, ":", dom_count/count
