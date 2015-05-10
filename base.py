@@ -1,6 +1,7 @@
 import cv2
 import reduction as R
 import similarity as S
+from dominance import colorz
 
 TILE_WIDTH = 30
 DESIRED_COLS = 50
@@ -10,11 +11,11 @@ class Base():
 		self.path = path
 		self.image = cv2.imread(path, cv2.IMREAD_UNCHANGED)
 		# Will actually discount second value
-		self.image = R.resize_by_w(self.image, TILE_WIDTH*TILE_COLS)
+		self.image = R.resize_by_w(self.image, TILE_WIDTH*DESIRED_COLS)
 		self.height = len(self.image)
 		self.width = len(self.image[0])
 		self.histograms = []
-		self.dominants = []
+		# self.dominants = []
 		self.grayscales = []
 		# Equivalent to for(int j=0; j<self.height-TILE_WIDTH; j+=TILE_WIDTH)
 		# Advantage of this way is if self.width%TILE_WIDTH != 0
@@ -35,6 +36,7 @@ class Base():
 				# plot_path = S.plot_histogram(histogram, title, colors)
 				# dominants = S.dominant_colors(histogram, colors)
 				# dominants = S.kmeans_dominance(self.image)
+				# dominants = colorz(quadrant)
 				hist_row.append(histogram)
 				# dom_row.append(dominants)
 				gray_row.append(grayscale)

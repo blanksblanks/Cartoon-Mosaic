@@ -2,6 +2,7 @@ import cv2
 import reduction as R
 import similarity as S
 from PIL import Image
+from dominance import colorz
 
 TILE_WIDTH = 30
 DISPLAY_WIDTH = 150
@@ -37,4 +38,5 @@ class Tile():
 		# Optional: find dominant colors
 		# self.dominants = S.dominant_colors(self.histogram, self.colors)
 		# self.dominants = S.kmeans_dominance(self.image)
+		# self.dominants = colorz(self.image)
 		# print self.dominants

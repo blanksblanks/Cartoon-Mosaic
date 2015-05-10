@@ -37,7 +37,7 @@ def main():
         if len(imfilelist) < 1: # number of tile images
             sys.exit ("Need to specify a path containing " + format + " files")
         tiles = {} # init dictionary of tile objects
-        dominants = {} # init dictionary of list of tiles by dominant color
+        # dominants = {} # init dictionary of list of tiles by dominant color
         num_images = len(imfilelist)
         if num_images > 500:
             num_images = 500 # only look up first 500 images
@@ -49,11 +49,13 @@ def main():
             imtitle = entitle(impath, tile_path, format)
             tile = T.Tile(impath, imtitle)
             tiles[imtitle] = tile
-            """for color in tile.dominants:
+            """ # Optional: use dominant colors method
+            for color in tile.dominants:
                 if color in dominants:
                     dominants[color].append(tile)
                 else:
-                    dominants[color] = [tile]"""
+                    dominants[color] = [tile]
+            """
     else:
         sys.exit("The path name does not exist")
 
@@ -76,19 +78,20 @@ def main():
     for i in xrange(base.rows):
         hist_row = base.histograms[i]
         grayscales = base.grayscales[i]
-        #dom_row = base.dominants[i]
+        # dom_row = base.dominants[i]
         the_row = []
         for j in xrange(base.cols):
             skip = False
             histogram = hist_row[j]
             graygram = grayscales[j]
-            """ Optional: use dominant colors method
+            """ # Optional: use dominant colors method
             for dom in dom_row[j]:
                 if dom in dominants:
                     closest_tile = random.choice(dominants[dom])
                     skip = True
                     dom_count += 1
-                    break"""
+                    break
+            """
             if (skip == False):
                 closest = 100
                 if str(histogram) in history:
@@ -141,7 +144,7 @@ def main():
     # Calculate percentage of database used and print stats
     print ""
     n = len(set([img for sublist in the_chosen for img in sublist]))
-    print "%f : %d out %d images from tile library used" %(round((float(n)/len(tiles)), 3), n, len(tiles))
+    print "Percent of possible tiles used: %.3f, %d out %d images from tile library used" %(round((float(n)/len(tiles)), 3), n, len(tiles))
     print ""
     print "Expensive operations:", expensive_count, "of", count, ":", expensive_count/count
     print "Dominant operations:", dom_count, "of", count, ":", dom_count/count
