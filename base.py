@@ -3,7 +3,7 @@ import reduction as R
 import similarity as S
 
 TILE_WIDTH = 30
-TILE_COLS = 50
+DESIRED_COLS = 50
 
 class Base():
 	def __init__(self, path):
