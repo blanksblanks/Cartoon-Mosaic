@@ -172,7 +172,7 @@ def plot_histogram(hist, title, colors=None, image=None):
         for r in xrange(BINS):
             for g in xrange(BINS):
                 for b in xrange(BINS):
-                    colors.append( (r,g,b) );
+                    colors.append( (r,g,b) )
         colors = sorted(colors, key=lambda c: -hist[(c[0])][(c[1])][(c[2])])
         # Remove bins from sorted list of colors if their count is 0 in the histogram
         for i in xrange(len(colors)):

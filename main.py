@@ -58,7 +58,7 @@ def main():
         dom_pickle.close()
         print "Reloaded pickled file."
     else:
-        if os.path.exists(base_path) and os.path.exists(tile_path):
+        if os.path.exists(tile_path):
             imfilelist=[os.path.join(tile_path,f) for f in os.listdir(tile_path) if f.endswith(format)]
             if len(imfilelist) < 1: # number of tile images
                 sys.exit ("Need to specify a path containing " + format + " files")
@@ -86,19 +86,22 @@ def main():
             pickle.dump( tiles, open( tile_ppath, "wb" ) )
             pickle.dump( dominants, open( dom_ppath, "wb" ) )
         else:
-            sys.exit("The path name does not exist")
+            sys.exit(tile_path + " does not exist")
 
     # Next, analyze base image
     print ""
     print "Analyzing base image..."
+    # Check if pickle file exists first
     if os.path.exists(base_ppath):
         base_pickle = open(base_ppath, "rb")
         base = pickle.load( base_pickle )
         base_pickle.close()
         print "Reloaded pickled file."
-    else:
+    elif os.path.exists(base_path):
         base = B.Base(base_path)
         pickle.dump( base, open( base_ppath, "wb" ) )
+    else:
+            sys.exit(base_path + " does not exist")
 
     # Find best tiles to compose base image
     print ""
@@ -137,16 +140,14 @@ def main():
                 else:
                     for key in tiles:
                         tile = tiles[key]
-                        if ALPHA == 1:
-                            dcolor = S.l1_color_norm(histogram, tile.histogram)
-                            dgray = 0
-                        elif ALPHA == 0:
-                            dcolor = 0
-                            dgray = S.l1_gray_norm(graygram, tile.gray)
-                        else:
+                        if ALPHA == 1: # All color
+                            distance = S.l1_color_norm(histogram, tile.histogram)
+                        elif ALPHA == 0: # All grayscale
+                            distance = S.l1_gray_norm(graygram, tile.gray)
+                        else: # Linear sum of ratio between the two
                             dcolor = S.l1_color_norm(histogram, tile.histogram)
                             dgray = S.l1_gray_norm(graygram, tile.gray)
-                        distance = ALPHA*dcolor + (1-ALPHA)*dgray
+                            distance = ALPHA*dcolor + (1-ALPHA)*dgray
                         if (distance < closest):
                             closest = distance
                             closest_tile = tile
@@ -196,3 +197,6 @@ def main():
     print "History operations:", history_count, "of", count, ":", history_count/count
 
 if __name__ == "__main__": main()
+
+
+
