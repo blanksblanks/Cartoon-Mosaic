@@ -17,7 +17,7 @@ BINS = 4
 BIN_SIZE = int(COL_RANGE/BINS)
 gBINS = BINS*BINS # need more bins for grayscale since there's only one axis
 gBIN_SIZE = int(COL_RANGE/gBINS)
-DOM_COL_THRESH = 0.1
+DOM_COL_THRESH = 0.3
 
 # ============================================================
 # Analysis
@@ -113,15 +113,16 @@ def dominant_colors(hist, colors):
     for (r,g,b) in colors:
         num_pixels += hist[r][g][b]
     for (r,g,b) in colors:
-        p = round( (float(hist[r][g][b]) / num_pixels), 3)
-        print p,
-        if p > DOM_COL_THRESH and (r,g,b) != (0,0,0) and (r,g,b) != (BINS-1,BINS-1,BINS-1):
-            dominant_colors.append( (r,g,b) )
-        # else:
-            # break
-        # Consider handling white also
-    # print dominant_colors
-    return dominant_colors
+        # Ignore black and white pixels
+        if (r,g,b) != (0,0,0) and (r,g,b) != (BINS-1,BINS-1,BINS-1):
+            p = round( (float(hist[r][g][b]) / num_pixels), 3)
+            # print p,
+            if p > DOM_COL_THRESH:
+                dominant_colors.append( (r,g,b) )
+            else:
+                # print 'Dominant colors:', dominant_colors
+                return dominant_colors # don't care about the rest
+    return dominant_colors # in case
 
 def kmeans_dominance(image):
     # reshape the image to be a list of pixels

@@ -1,14 +1,22 @@
 from __future__ import division
-import sys, os
+try:
+   import cPickle as pickle
+except:
+   import pickle
+import sys
+import os
 import random
+from PIL import Image
 import cv2
 import numpy as np
 import tile as T
 import base as B
 import similarity as S
-from PIL import Image
 
-ALPHA = 1.0
+# Toggle between 1.0 and 0.0 for linear sum ratio of best match
+# 1.0 is all color, 0.0 is pure grayscale
+ALPHA = 1
+DOM_ON = 0
 
 def entitle(impath, path, format):
     start = len(path)+1
@@ -20,6 +28,7 @@ def main():
     # Check if user has provided a base image and tile library
     if len(sys.argv) < 2:
         sys.exit("Usage: python main.py base-image-path tile-directory-path tile-format\n \
+                  Note: base-image-path should not end in / \n \
                   Example: python main.py Low.jpg _db/justinablakeney .png")
 
     # Parse command line args
@@ -27,40 +36,69 @@ def main():
     tile_path = sys.argv[2]
     format = sys.argv[3]
 
+    # Pickle path names
+    base_ppath = base_path[:-4]+".p"
+    tile_ppath = tile_path+".p"
+    dom_ppath = tile_path+"_dom.p"
+    # Warning: if experimenting with changing constants other than ALPHA, better
+    # to delete these pickle files and try again
+    # Saving history doesn't make sense as alpha values often shift
+    # history_ppath = tile_path+"-"+os.path.basename(base_path)[:-4]+".p"
+
     # Read tile library images first
     print "Analyzing tile library images..."
-    if os.path.exists(base_path) and os.path.exists(tile_path):
-        imfilelist=[os.path.join(tile_path,f) for f in os.listdir(tile_path) if f.endswith(format)]
-        if len(imfilelist) < 1: # number of tile images
-            sys.exit ("Need to specify a path containing " + format + " files")
-        tiles = {} # init dictionary of tile objects
-        # dominants = {} # init dictionary of list of tiles by dominant color
-        num_images = len(imfilelist)
-        if num_images > 500:
-            num_images = 500 # only look up first 500 images
-        for i in xrange(num_images):
-            impath = imfilelist[i]
-            # print(impath)
-            if ( (i+1)%50 == 0 or i == num_images-1 ):
-                print i+1, "out of", num_images, "images"
-            imtitle = entitle(impath, tile_path, format)
-            tile = T.Tile(impath, imtitle)
-            tiles[imtitle] = tile
-            """ # Optional: use dominant colors method
-            for color in tile.dominants:
-                if color in dominants:
-                    dominants[color].append(tile)
-                else:
-                    dominants[color] = [tile]
-            """
-    else:
-        sys.exit("The path name does not exist")
 
-    print ""
+    # Check if pickle file exists
+    if os.path.exists(tile_ppath) and os.path.exists(dom_ppath):
+        base_pickle = open(tile_ppath, "rb")
+        tiles = pickle.load( base_pickle )
+        base_pickle.close()
+        dom_pickle = open(dom_ppath, "rb")
+        dominants = pickle.load( dom_pickle)
+        dom_pickle.close()
+        print "Reloaded pickled file."
+    else:
+        if os.path.exists(base_path) and os.path.exists(tile_path):
+            imfilelist=[os.path.join(tile_path,f) for f in os.listdir(tile_path) if f.endswith(format)]
+            if len(imfilelist) < 1: # number of tile images
+                sys.exit ("Need to specify a path containing " + format + " files")
+            tiles = {} # init dictionary of tile objects
+            dominants = {} # init dictionary of list of tiles by dominant color
+            num_images = len(imfilelist)
+            if num_images > 500:
+                num_images = 500 # only look up first 500 images
+            for i in xrange(num_images):
+                impath = imfilelist[i]
+                # print(impath)
+                if ( (i+1)%50 == 0 or i == num_images-1 ):
+                    print i+1, "out of", num_images, "images"
+                imtitle = entitle(impath, tile_path, format)
+                tile = T.Tile(impath, imtitle)
+                tiles[imtitle] = tile
+                # Optional: use dominant colors method
+                if (DOM_ON):
+                    for color in tile.dominants:
+                        if color in dominants:
+                            dominants[color].append(tile)
+                        else:
+                            dominants[color] = [tile]
+            # Save tiles in pickle file for future use
+            pickle.dump( tiles, open( tile_ppath, "wb" ) )
+            pickle.dump( dominants, open( dom_ppath, "wb" ) )
+        else:
+            sys.exit("The path name does not exist")
 
     # Next, analyze base image
+    print ""
     print "Analyzing base image..."
-    base = B.Base(base_path)
+    if os.path.exists(base_ppath):
+        base_pickle = open(base_ppath, "rb")
+        base = pickle.load( base_pickle )
+        base_pickle.close()
+        print "Reloaded pickled file."
+    else:
+        base = B.Base(base_path)
+        pickle.dump( base, open( base_ppath, "wb" ) )
 
     # Find best tiles to compose base image
     print ""
@@ -75,20 +113,21 @@ def main():
     for i in xrange(base.rows):
         hist_row = base.histograms[i]
         grayscales = base.grayscales[i]
-        # dom_row = base.dominants[i]
+        if (DOM_ON):
+            dom_row = base.dominants[i]
         the_row = []
         for j in xrange(base.cols):
             skip = False
             histogram = hist_row[j]
             graygram = grayscales[j]
-            """ # Optional: use dominant colors method
-            for dom in dom_row[j]:
-                if dom in dominants:
-                    closest_tile = random.choice(dominants[dom])
-                    skip = True
-                    dom_count += 1
-                    break
-            """
+            # Optional: use dominant colors method
+            if (DOM_ON and ALPHA == 1):
+                for dom in dom_row[j]:
+                    if dom in dominants:
+                        closest_tile = random.choice(dominants[dom])
+                        skip = True
+                        dom_count += 1
+                        break
             if (skip == False):
                 closest = 100
                 if str(histogram) in history:
@@ -98,8 +137,15 @@ def main():
                 else:
                     for key in tiles:
                         tile = tiles[key]
-                        dcolor = S.l1_color_norm(histogram, tile.histogram)
-                        dgray = S.l1_gray_norm(graygram, tile.gray)
+                        if ALPHA == 1:
+                            dcolor = S.l1_color_norm(histogram, tile.histogram)
+                            dgray = 0
+                        elif ALPHA == 0:
+                            dcolor = 0
+                            dgray = S.l1_gray_norm(graygram, tile.gray)
+                        else:
+                            dcolor = S.l1_color_norm(histogram, tile.histogram)
+                            dgray = S.l1_gray_norm(graygram, tile.gray)
                         distance = ALPHA*dcolor + (1-ALPHA)*dgray
                         if (distance < closest):
                             closest = distance
@@ -119,7 +165,7 @@ def main():
         print "Your GRAYSCALE MOSAIC will be done soon."
         mosaic = Image.new('L', (base.cols*size[0], base.rows*size[1]))
     else:
-        print "Your COLORFUL MOSAIC will be done soon."
+        print "Your COLOR MOSAIC will be done soon."
         mosaic = Image.new('RGBA', (base.cols*size[0], base.rows*size[1]))
     rowcount = 0
     # print "row: " + str(rowcount)
@@ -133,7 +179,9 @@ def main():
             mosaic.paste(img, (colcount*size[0], rowcount*size[1]))
             colcount += 1
         rowcount += 1
-    mosaic.save(base_path[:-4]+"mosaic.png")
+    mosaic.save(base_path[:-4]+"-Mosaic"+str(ALPHA)+".png")
+
+    print "Successfully saved to "+base_path[:-4]+"-Mosaic"+str(ALPHA)+".png"
 
     f = open('mosaic_keys.txt', 'w')
     f.write(str(the_chosen))

@@ -37,7 +37,8 @@ class Tile():
 		# plot_path = S.plot_histogram(self.histogram, self.title, self.colors)
 
 		# Optional: find dominant colors
-		# self.dominants = S.dominant_colors(self.histogram, self.colors)
+		# print 'Title: ', title,
+		self.dominants = S.dominant_colors(self.histogram, self.colors)
 		# self.dominants = S.kmeans_dominance(self.image)
 		# self.dominants = colorz(self.image)
 		# print self.dominants
