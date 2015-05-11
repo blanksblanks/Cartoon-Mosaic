@@ -43,7 +43,7 @@ class Base():
 			self.histograms.append(hist_row)
 			# self.dominants.append(dom_row)
 			self.grayscales.append(gray_row)
-			print "%d out of %d rows" %((j/TILE_WIDTH)+1, self.height/TILE_WIDTH)
+			print "%d out of %d rows" %((j/TILE_WIDTH)+1, (self.height/TILE_WIDTH))
 
 		self.rows = len(self.histograms)
 		self.cols = len(self.histograms[0])

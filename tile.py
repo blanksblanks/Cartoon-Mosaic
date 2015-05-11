@@ -1,15 +1,16 @@
 import cv2
-import reduction as R
-import similarity as S
 from PIL import Image
 from dominance import colorz
 
+import reduction as R
+import similarity as S
+
 TILE_WIDTH = 30
-DISPLAY_WIDTH = 150
+DISPLAY_WIDTH = 50
 
 class Tile():
 	def __init__(self, path, title):
-		"""Open in Numpy format for histogram analysis"""
+		"""Open in Numpy array for histogram analysis"""
 		self.path = path
 		self.title = title
 		size = (TILE_WIDTH, TILE_WIDTH)

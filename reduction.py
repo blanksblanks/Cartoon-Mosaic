@@ -1,5 +1,6 @@
 from __future__ import division
-import cv2, os, sys, time
+import os, sys, time
+import cv2
 import numpy as np
 from PIL import Image
 
@@ -36,7 +37,6 @@ def crop_square(image, size):
 		offset = (h - w) / 2
 		image = crop(image, offset, h-offset, 0, w)
 	# else it is already square
-	# resize if necessary
 	if len(image) != size[0]:
 		image = resize_by_w(image, size[0])
 	return image

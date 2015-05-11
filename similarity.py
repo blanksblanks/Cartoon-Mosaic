@@ -12,12 +12,10 @@ import operator
 # Constants
 # ============================================================
 
-NUM_IM = 40
-NUM_CLUSTERS = 7
 COL_RANGE = 256
 BINS = 4
-gBINS = BINS*4 #need more bins for grayscale since there's only one axis
 BIN_SIZE = int(COL_RANGE/BINS)
+gBINS = BINS*BINS # need more bins for grayscale since there's only one axis
 gBIN_SIZE = int(COL_RANGE/gBINS)
 DOM_COL_THRESH = 0.1
 
@@ -26,6 +24,11 @@ DOM_COL_THRESH = 0.1
 # ============================================================
 
 def grayscale_histogram(image, title):
+    '''
+    Calculate the grayscale / luminescence histogram of an image
+    by counting the number of grayscale values in a set number of
+    bins
+    '''
     grayscale = []
     h = len(image)
     w = len(image[0])
@@ -46,7 +49,6 @@ def color_histogram(image, title):
     of RGB values in a set number of bins
     image -- pre-loaded image using cv2.imread function
     title -- image title
-    (optional: visualize the histogram as a bar graph)
     '''
     colors = []
     h = len(image)
@@ -112,11 +114,11 @@ def dominant_colors(hist, colors):
         num_pixels += hist[r][g][b]
     for (r,g,b) in colors:
         p = round( (float(hist[r][g][b]) / num_pixels), 3)
-        # print p,
+        print p,
         if p > DOM_COL_THRESH and (r,g,b) != (0,0,0) and (r,g,b) != (BINS-1,BINS-1,BINS-1):
             dominant_colors.append( (r,g,b) )
-        else:
-            break
+        # else:
+            # break
         # Consider handling white also
     # print dominant_colors
     return dominant_colors

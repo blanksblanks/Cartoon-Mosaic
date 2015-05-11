@@ -20,15 +20,12 @@ def main():
     # Check if user has provided a base image and tile library
     if len(sys.argv) < 2:
         sys.exit("Usage: python main.py base-image-path tile-directory-path tile-format\n \
-                  Example: python main.py A3.png _extras/jb .png")
+                  Example: python main.py Low.jpg _db/justinablakeney .png")
 
     # Parse command line args
     base_path = sys.argv[1]
-    format = sys.argv[1][-4:]
     tile_path = sys.argv[2]
-
-    if len(sys.argv) is 4:
-        format = sys.argv[3]
+    format = sys.argv[3]
 
     # Read tile library images first
     print "Analyzing tile library images..."
@@ -136,7 +133,7 @@ def main():
             mosaic.paste(img, (colcount*size[0], rowcount*size[1]))
             colcount += 1
         rowcount += 1
-    mosaic.save("mosaic.png")
+    mosaic.save(base_path[:-4]+"mosaic.png")
 
     f = open('mosaic_keys.txt', 'w')
     f.write(str(the_chosen))
