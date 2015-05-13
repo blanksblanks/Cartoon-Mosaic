@@ -1,7 +1,10 @@
-![Original](_figs/sol_original.jpg)                    
-![50x75](_figs/sol_mosaic_50x75.jpg)                    
-![100x150](_figs/sol_mosaic_100x150.jpg)
+![Original](_figures/sol_original.jpg)                    
+![50x75](_figures/sol_mosaic_50x75.jpg)                    
+![100x150](_figures/sol_mosaic_100x150.jpg)
 
+Example output:
+
+```
 ➜  Mosaic-Maker git:(master) ✗ time python main.py 512px-Statue_of_liberty_01.jpg _db/justinablakeney .png
 Analyzing tile library images...
 Reloaded pickled file.
@@ -170,3 +173,4 @@ Dominant operations: 872 of 3750 : 0.232533333333
 History operations: 1570 of 3750 : 0.418666666667
 
 python main.py 512px-Statue_of_liberty_01.jpg _db/justinablakeney .png  274.39s user 4.54s system 94% cpu 4:54.68 total
+```
