@@ -6,11 +6,11 @@ Source: [http://commons.wikimedia.org/wiki/File%3AStatue_of_liberty_01.jpg](http
 
 ## Mosaic (100 columns by 150 rows)
 
-![100x150](_figures/sol_mosaic_100x150.jpg)
+![100x150](_figures/sol_mosaic_100x150.png)
 
 ## Mosaic (50 columns by 75 rows)
 
-![50x75](_figures/sol_mosaic_50x75.jpg)
+![50x75](_figures/sol_mosaic_50x75.png)
 
 Console output (note: I had to remove the .p serialization file between runs because we changed the number of desired columns so the base image object had to be recalibrated):
 
