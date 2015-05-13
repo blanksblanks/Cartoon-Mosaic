@@ -10,7 +10,7 @@ Source: [http://commons.wikimedia.org/wiki/File%3AStatue_of_liberty_01.jpg](http
 
 ## Mosaic (50 columns by 75 rows)
 
-![50x75](_figures/(http://www.cs.columbia.edu/~nb2406/cs4735/images/sol_mosaic_50x75.png)
+![50x75](http://www.cs.columbia.edu/~nb2406/cs4735/images/sol_mosaic_50x75.png)
 
 Console output (note: I had to remove the .p serialization file between runs because we changed the number of desired columns so the base image object had to be recalibrated):
 
