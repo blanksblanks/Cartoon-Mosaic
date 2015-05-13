@@ -4,15 +4,15 @@
 
 Source: [http://commons.wikimedia.org/wiki/File%3AStatue_of_liberty_01.jpg](http://commons.wikimedia.org/wiki/File%3AStatue_of_liberty_01.jpg)
 
-Please give the mosaic images a moment to load! Also, if you click a mosaic image, you can see up close the individual tiles that make up the mosaic.
+If you click a mosaic image, you can see up close the individual tiles that make up the mosaic.
 
 ## Mosaic (50 columns by 75 rows, Runtime: 4:54)
 
-![50x75](http://www.cs.columbia.edu/~nb2406/cs4735/images/sol_mosaic_50x75.png)
+[![50x75](_figures/sol_mosaic_50x75_thumb.png)](http://www.cs.columbia.edu/~nb2406/cs4735/images/sol_mosaic_50x75.png)
 
 ## Mosaic (100 columns by 150 rows, Runtime: 15:37)
 
-[![100x150](_figures/ sol_mosaic_100x150_thumb.png)]
+[![100x150](_figures/sol_mosaic_100x150_thumb.png)]
 (http://www.cs.columbia.edu/~nb2406/cs4735/images/sol_mosaic_100x150.png)
 
 Below is the console output. (Note: I had to remove the .p serialization file between runs because we changed the number of desired columns so the base image object had to be recalibrated.)
