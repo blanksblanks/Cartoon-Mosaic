@@ -8,7 +8,7 @@ Source: [http://commons.wikimedia.org/wiki/File%3AStatue_of_liberty_01.jpg](http
 
 ![100x150](http://www.cs.columbia.edu/~nb2406/cs4735/images/sol_mosaic_100x150.png)
 
-## Mosaic (50 columns by 75 rows, runtime: 4:54)
+## Mosaic (50 columns by 75 rows, Runtime: 4:54)
 
 ![50x75](http://www.cs.columbia.edu/~nb2406/cs4735/images/sol_mosaic_50x75.png)
 
