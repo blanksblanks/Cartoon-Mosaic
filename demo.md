@@ -12,7 +12,8 @@ Please give the mosaic images a moment to load! Also, if you click a mosaic imag
 
 ## Mosaic (100 columns by 150 rows, Runtime: 15:37)
 
-![100x150](http://www.cs.columbia.edu/~nb2406/cs4735/images/sol_mosaic_100x150.png)
+[![100x150](_figures/ sol_mosaic_100x150.png)]
+(http://www.cs.columbia.edu/~nb2406/cs4735/images/sol_mosaic_100x150.png)
 
 Below is the console output. (Note: I had to remove the .p serialization file between runs because we changed the number of desired columns so the base image object had to be recalibrated.)
 
