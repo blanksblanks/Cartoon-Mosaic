@@ -4,15 +4,17 @@
 
 Source: [http://commons.wikimedia.org/wiki/File%3AStatue_of_liberty_01.jpg](http://commons.wikimedia.org/wiki/File%3AStatue_of_liberty_01.jpg)
 
-## Mosaic (100 columns by 150 rows)
+## Mosaic (100 columns by 150 rows, Runtime: 15:37)
 
 ![100x150](http://www.cs.columbia.edu/~nb2406/cs4735/images/sol_mosaic_100x150.png)
 
-## Mosaic (50 columns by 75 rows)
+## Mosaic (50 columns by 75 rows, runtime: 4:54)
 
 ![50x75](http://www.cs.columbia.edu/~nb2406/cs4735/images/sol_mosaic_50x75.png)
 
-Console output (note: I had to remove the .p serialization file between runs because we changed the number of desired columns so the base image object had to be recalibrated):
+Please give the images a moment to load! Also, if you click an image, you can see up close the individual tiles that make up the mosaic.
+
+Below is the console output. (Note: I had to remove the .p serialization file between runs because we changed the number of desired columns so the base image object had to be recalibrated.)
 
 ```
 ➜  Mosaic-Maker git:(master) ✗ time python main.py 512px-Statue_of_liberty_01.jpg _db/justinablakeney .png
