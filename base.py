@@ -32,7 +32,7 @@ class Base():
 				histogram, quadrant, colors = S.color_histogram(quadrant, title)
 				grayscale = S.grayscale_histogram(quadrant, title)
 				# Optional, save histogram as bar graph; or record dominant colors
-				# plot_path = S.plot_histogram(histogram, title, colors)
+				plot_path = S.plot_histogram(histogram, title, colors)
 				dominants = S.dominant_colors(histogram, colors) #
 				# dominants = S.kmeans_dominance(self.image)
 				# dominants = colorz(quadrant)
@@ -42,7 +42,7 @@ class Base():
 			self.histograms.append(hist_row)
 			self.dominants.append(dom_row) #
 			self.grayscales.append(gray_row)
-			print "%d out of %d rows" %((j/TILE_WIDTH)+1, (self.height/TILE_WIDTH))
+			print "%d out of %d rows" %((j/TILE_WIDTH)+1, int(round((float(self.height)/TILE_WIDTH),0)))
 
 		self.rows = len(self.histograms)
 		self.cols = len(self.histograms[0])

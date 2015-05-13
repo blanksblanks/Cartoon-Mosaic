@@ -16,7 +16,7 @@ import similarity as S
 # Toggle between 1.0 and 0.0 for linear sum ratio of best match
 # 1.0 is all color, 0.0 is pure grayscale
 ALPHA = 1
-DOM_ON = 0
+DOM_ON = 1
 
 def entitle(impath, path, format):
     start = len(path)+1
@@ -161,12 +161,12 @@ def main():
 
     # Generate mosaic
     print ""
-    size = tile.display.size # any tile will have the same size
+    size = tiles[the_chosen[0][0]].display.size # any tile will have the same size
     if ALPHA == 0: #grayscale mosaic
-        print "Your GRAYSCALE MOSAIC will be done soon."
+        print "Your %d columns by %d rows GRAYSCALE MOSAIC will be done soon." %(base.cols, base.rows)
         mosaic = Image.new('L', (base.cols*size[0], base.rows*size[1]))
     else:
-        print "Your COLOR MOSAIC will be done soon."
+        print "Your %d columns by %d rows COLOR MOSAIC will be done soon." %(base.cols, base.rows)
         mosaic = Image.new('RGBA', (base.cols*size[0], base.rows*size[1]))
     rowcount = 0
     # print "row: " + str(rowcount)
@@ -190,7 +190,7 @@ def main():
     # Calculate percentage of database used and print stats
     print ""
     n = len(set([img for sublist in the_chosen for img in sublist]))
-    print "Percent of possible tiles used: %.3f, %d out %d images from tile library used" %(round((float(n)/len(tiles)), 3), n, len(tiles))
+    print "Percent of possible tiles used: %.2f%% (%d out %d images from tile library used)" %( ((float(n)/len(tiles))*100), n, len(tiles))
     print ""
     print "Expensive operations:", expensive_count, "of", count, ":", expensive_count/count
     print "Dominant operations:", dom_count, "of", count, ":", dom_count/count
